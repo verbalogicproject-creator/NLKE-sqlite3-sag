@@ -30,6 +30,7 @@ from __future__ import annotations
 
 from typing import Any, Callable
 
+from .payload import InadmissiblePayload
 from .query import SagJournal
 from .schema import DEFAULT_KINDS, JournalSchema
 
@@ -59,18 +60,27 @@ def run_fixture(fixture: dict[str, Any], *, hash_key: Any = None) -> RunResult:
         ns=chain.get("ns", ""),
     )
     j = SagJournal.open(":memory:", schema, hash_key=hash_key)
-    for i in inputs:
-        j.remember(
-            i["content"],
-            kind=i.get("kind", "general"),
-            tags=i.get("tags", []),
-            metadata=i.get("metadata"),
-            session_id=i.get("session_id"),
-            batch=i.get("batch"),
-            method=i.get("method", "manual"),
-            id=i["id"],
-            created_at=i["created_at"],
-        )
+    refused = False
+    refused_index: int | None = None
+    for idx, i in enumerate(inputs):
+        try:
+            j.remember(
+                i["content"],
+                kind=i.get("kind", "general"),
+                tags=i.get("tags", []),
+                metadata=i.get("metadata"),
+                session_id=i.get("session_id"),
+                batch=i.get("batch"),
+                method=i.get("method", "manual"),
+                id=i["id"],
+                created_at=i["created_at"],
+            )
+        except InadmissiblePayload:
+            # A refusal fixture asserts the payload gate rejects this input. Record
+            # it and stop — the refused entry never enters the chain.
+            refused = True
+            refused_index = idx
+            break
 
     for t in fixture.get("tamper", []):
         for col, val in t["set"].items():
@@ -92,6 +102,8 @@ def run_fixture(fixture: dict[str, Any], *, hash_key: Any = None) -> RunResult:
         "rows": rows,
         "verify": j.verify(key=hash_key),
         "count": j.count()["episodes"],
+        "refused": refused,
+        "refused_index": refused_index,
     }
     j.close()
     return result
@@ -107,6 +119,11 @@ def check_fixture(fixture: dict[str, Any], *, hash_key: Any = None) -> list[str]
     exp = fixture["expected"]
     got = run_fixture(fixture, hash_key=hash_key)
     errors: list[str] = []
+
+    if "refused" in exp and got["refused"] != exp["refused"]:
+        errors.append(f"refused: expected {exp['refused']}, got {got['refused']}")
+    if "refused_index" in exp and got["refused_index"] != exp["refused_index"]:
+        errors.append(f"refused_index: expected {exp['refused_index']}, got {got['refused_index']}")
 
     if "count" in exp and got["count"] != exp["count"]:
         errors.append(f"count: expected {exp['count']}, got {got['count']}")

@@ -11,8 +11,11 @@ boundary and fixtures for register-before-emit, revision/idempotency, causal rec
 claims, observations, trust degradation, and committed-versus-observed; telemetry
 remains outside the journal"). Nothing here is Claude-, OpenAI-, or model-specific.
 
-> **Status.** `0.1-draft`. Frozen fields below are testable today via `fixtures/`. The
-> reconciliation items (§11) are open and must be agreed jointly before a `0.1` freeze.
+> **Status.** `0.1-draft`. Frozen fields below are testable today via `fixtures/`. The four §13
+> reconciliation items are **frozen** (jointly reconciled with SAG Video on 2026-07-24) and each is
+> pinned by a fixture. The id advances to `0.1` only once both providers' adapters pass the full
+> fixture set (§12) — SAG Video has independently reproduced the original four; the §13 fixtures are
+> the next reproduction target.
 
 ---
 
@@ -247,19 +250,38 @@ no-op), `tamper_content` (→ row-hash-mismatch), `sequence_gap` (→ sequence-g
 harness is `sqlite3_sag.conformance` (`run_fixture` / `check_fixture`); plug your writer in
 and match the same `expected` blocks.
 
-## 13. Open reconciliation items (before a `0.1` freeze)
+## 13. Reconciled joint decisions — FROZEN 2026-07-24
 
-These are fixture-tested interop details to agree jointly with the SAG Video side — do not
-finalize unilaterally:
+The four items below were reconciled jointly with the SAG Video side (OpenAI Codex) — Codex's
+proposed answers (`sag-video-progress-x1-response-2026-07-24.ngf.md` §4) matched this reference's
+defaults. They are now **frozen** and each is pinned by a conformance fixture. (The protocol id
+stays `0.1-draft` until both providers' adapters pass the full fixture set — see §12; the *decisions*
+here are frozen.)
 
-1. **Unicode normalization of `content`.** SAG Video NFC-normalizes URI components; this
-   reference does **not** normalize free-text `content`. Pick one and add a fixture.
-2. **Number profile.** Confirm floats-as-strings (this reference forbids floats in
-   `metadata`).
-3. **`ns` ↔ scope.** Whether `ns` maps to SAG Video's `scope_uri` authority for
-   cross-stream splice-protection.
-4. **Receipt/observation `metadata` field names** — align with SAG Video's
-   `receipts`/`observations` columns so the same declared inputs round-trip.
+1. **Free-text is NOT normalized — FROZEN.** `content` is preserved exactly after UTF-8 validation;
+   NFC normalization applies to URI path components (SAG Video's `sag://` URIs), **never** to journal
+   prose. An NFC-composed and an NFD-decomposed spelling of the same word are **distinct inputs with
+   distinct hashes**. Pinned by `fixtures/unicode_distinct.json`.
+2. **Number profile — FROZEN.** `metadata` carries no floats and no bytes. Adapters either refuse
+   fractional values or encode them as schema-declared **decimal strings**; they never silently round.
+   Pinned by `fixtures/refuse_float_metadata.json` (a nested float is refused).
+3. **`ns` = the full canonical `scope_uri` — FROZEN.** In production, `ns` is the complete X1
+   `scope_uri` (authority + scope-kind + scope-id), giving cross-stream splice-protection between
+   providers with identical local ids. `ns=""` is reserved for explicitly-global conformance fixtures.
+   `ns` binds into the hash: pinned by `fixtures/namespace_scoped.json` (same inputs, `scope_uri` ns →
+   different hashes than the `ns=""` `basic_two_rows`).
+4. **Receipt/observation metadata field names — FROZEN.** Pinned by
+   `fixtures/receipt_observation_roundtrip.json`:
+   - `sag.receipt` metadata: `receipt_id`, `request_id`, `command`, `status`, `actor`, `project_id`,
+     `project_revision`; optional `trace_id`; and a bounded canonical `payload` or `payload_hash`
+     (per the §13.2 number profile).
+   - `sag.observation` metadata: `observation_id`, `receipt_id`, `observer`, `observer_mode`,
+     `passed` (`bool|null`), `inconclusive`, optional `artifact_hash`, bounded `findings` or
+     `findings_hash`, and `observed_at`.
+   - **Recommended deterministic entry id** for these kinds:
+     `sha256(scope_uri ‖ NUL ‖ kind ‖ NUL ‖ source_record_id_or_request_id)` — so a producer's
+     `(scope, request_id)` idempotency maps to the journal `id` (§6). The observation entry must be
+     **independently authored**; a receipt `status` alone never maps to observed success (§9).
 
 ---
 

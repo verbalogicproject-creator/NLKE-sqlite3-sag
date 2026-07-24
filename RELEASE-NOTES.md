@@ -1,5 +1,18 @@
 # Release notes
 
+## v0.1.1 — X1 §13 joint freeze
+
+The four `PROTOCOL.md` §13 reconciliation items are now **frozen**, jointly
+agreed with the SAG Video side (OpenAI Codex, whose independent adapter
+reproduced the original four fixtures byte-for-byte). Four new conformance
+fixtures (eight total) pin the decisions: free-text is not normalized
+(`unicode_distinct`), floats in `metadata` are refused (`refuse_float_metadata`),
+`ns` = the canonical `scope_uri` binds into the hash (`namespace_scoped`), and
+the `sag.receipt` / `sag.observation` metadata field names are pinned
+(`receipt_observation_roundtrip`). The conformance harness now supports refusal
+fixtures. The protocol id stays `sag-journal/0.1-draft` until both adapters pass
+the full fixture set. See `CHANGELOG.md`.
+
 ## v0.1.0 — initial release
 
 `sqlite3-sag` is the SAG journal as a tamper-evident, SQLite-native

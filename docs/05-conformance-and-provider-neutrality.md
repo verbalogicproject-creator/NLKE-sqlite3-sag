@@ -125,7 +125,7 @@ needing to import it.
 ## Verify your build
 
 ```bash
-pytest -q tests/test_conformance.py          # 5 passed (4 fixtures + 1 existence check)
+pytest -q tests/test_conformance.py          # 9 passed (8 fixtures + 1 existence check)
 python tools/gen_fixtures.py                 # regenerate; should be a no-op on a clean tree
 python examples/external_adapter_conformance.py
 # Verify your build: ok (2 fixtures reproduced from the spec, no sqlite3_sag import)

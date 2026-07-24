@@ -1,0 +1,51 @@
+{
+  "name": "namespace_scoped",
+  "description": "§13.3 ns binds into the hash: the same logical inputs under a scope_uri ns hash DIFFERENTLY than the ns='' basic_two_rows fixture.",
+  "chain": {
+    "alg": "sha256",
+    "ns": "sag://sag-video/project/demo/project/demo"
+  },
+  "inputs": [
+    {
+      "id": "11111111111111111111111111111111",
+      "created_at": "2026-01-01T00:00:00+00:00",
+      "kind": "sag.retrieval",
+      "content": "loaded context pack A",
+      "tags": [
+        "ctx",
+        "load"
+      ]
+    },
+    {
+      "id": "22222222222222222222222222222222",
+      "created_at": "2026-01-01T00:00:01+00:00",
+      "kind": "sag.context_load",
+      "content": "answered from pack A",
+      "tags": [],
+      "metadata": {
+        "k": 1
+      },
+      "session_id": "s1"
+    }
+  ],
+  "expected": {
+    "rows": [
+      {
+        "seq": 1,
+        "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+        "row_hash": "187429afe85ba30bc864574e52ec1e9c9466524f9f78ed74d644c3b0c7a455c5"
+      },
+      {
+        "seq": 2,
+        "prev_hash": "187429afe85ba30bc864574e52ec1e9c9466524f9f78ed74d644c3b0c7a455c5",
+        "row_hash": "7cd41035cd10400a47d293a5b90c242907f1d9fc4669e3eb99e1b1b3595ec66d"
+      }
+    ],
+    "verify": {
+      "ok": true,
+      "break": null,
+      "checked": 2
+    },
+    "count": 2
+  }
+}

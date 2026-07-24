@@ -103,7 +103,7 @@ from a shell / CI job.
 ## Verify your build
 
 ```bash
-pytest -q                              # 21 passed
+pytest -q                              # 25 passed
 python examples/append_and_verify.py   # prints "Verify your build: ok"
 ```
 

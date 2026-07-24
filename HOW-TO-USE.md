@@ -133,7 +133,7 @@ without lying about what "append-only" means. Only the entry log
 ## I'm implementing this protocol in a different language / store
 
 Read `PROTOCOL.md` (the frozen wire contract, especially §5.1's canonical
-preimage) and reproduce the four fixtures in `fixtures/*.json` byte-for-byte.
+preimage) and reproduce the eight fixtures in `fixtures/*.json` byte-for-byte.
 `examples/external_adapter_conformance.py` is a from-the-spec-alone
 reference walk you can compare your own implementation against without
 importing anything from this package.

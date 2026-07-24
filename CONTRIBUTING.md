@@ -21,7 +21,7 @@ Requires Python `>=3.10` (`pyproject.toml`).
 ## The change loop
 
 ```bash
-pytest -q                              # 21 tests must pass
+pytest -q                              # 25 tests must pass
 python -m compileall -q sqlite3_sag project_memory tests examples tools
 python tools/revendor.py check         # declared_core/ must be untouched
 python tools/gen_fixtures.py && git diff --exit-code fixtures/   # fixtures must regenerate as a no-op

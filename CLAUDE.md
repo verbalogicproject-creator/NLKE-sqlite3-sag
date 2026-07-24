@@ -147,7 +147,7 @@ Three artifacts define the actual contract, in order of authority:
 ## Running things
 
 ```bash
-pytest -q                              # 21 tests: chain, tamper, idempotency, conformance, compat, hmac, migration
+pytest -q                              # 25 tests: chain, tamper, idempotency, conformance, compat, hmac, migration
 python examples/append_and_verify.py   # smoke: append, verify, tamper-detect
 python tools/gen_fixtures.py           # regenerate fixtures/*.json; must be a no-op diff on a clean tree
 python tools/revendor.py check         # vendoring drift guard for declared_core/

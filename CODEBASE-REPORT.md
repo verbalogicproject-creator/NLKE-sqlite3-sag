@@ -18,7 +18,7 @@ split:
 | `sqlite3_sag/` | 1,304 | 10 | the primitive: chain, gates, journal object, CLI, conformance harness |
 | `declared_core/` | 1,788 | 15 | vendored retrieval engine (BM25 + structural + RRF + dimensions) |
 | `project_memory/` | 58 | 1 | compat shim (re-exports only) |
-| `tests/` | 255 | 2 | 21 tests across 2 files |
+| `tests/` | 255 | 2 | 25 tests across 2 files |
 | `tools/` | 287 | 2 | fixture generator, vendoring drift guard |
 | `examples/` | 403 | 5 | runnable, per-topic demonstrations |
 | `conftest.py` | 8 | 1 | pytest sys.path setup (no-install test running) |
@@ -120,7 +120,7 @@ sqlite3_sag/
 declared_core/          vendored retrieval engine (see VENDORED.json)
 project_memory/          compat shim (re-exports sqlite3_sag under old names)
 fixtures/                  conformance fixtures (generated, not hand-written)
-tests/                       21 tests across 2 files
+tests/                       25 tests across 2 files
 tools/                         gen_fixtures.py, revendor.py, verify_standalone.sh
 docs/                           8 numbered progressive chapters
 examples/                        5 runnable, per-topic scripts

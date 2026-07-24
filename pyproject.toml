@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sqlite3-sag"
-version = "0.1.0"
+version = "0.1.1"
 description = "The SAG journal as a tamper-evident, SQLite-native primitive: a declared, append-only log of typed entries with a SHA-256 hash chain you can verify. Register-before-emit, refuse-to-pretend, provider-neutral. Pure-Python, pure-stdlib, $0."
 readme = "README.md"
 requires-python = ">=3.10"

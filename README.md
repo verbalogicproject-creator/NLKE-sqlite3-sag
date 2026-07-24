@@ -72,7 +72,7 @@ sqlite3-sag recent journal.db
 ## Verify your build
 
 ```bash
-pytest -q                          # the Stage-1 green bar: 21 passed (chain, tamper, idempotency, conformance, compat, hmac, migration)
+pytest -q                          # the Stage-1 green bar: 25 passed (chain, tamper, idempotency, conformance, compat, hmac, migration)
 python tools/gen_fixtures.py       # regenerate fixtures (should be a no-op on a clean tree)
 python examples/append_and_verify.py   # prints "Verify your build: ok"
 python tools/revendor.py check     # vendoring drift guard for declared_core/
@@ -191,7 +191,7 @@ sqlite3-sag/
 ├── declared_core/                    vendored retrieval engine (see VENDORED.json)
 ├── project_memory/                    compat shim (re-exports sqlite3_sag under old names)
 ├── fixtures/                           conformance fixtures (generated, not hand-written)
-├── tests/                               21 tests across 2 files
+├── tests/                               25 tests across 2 files
 ├── tools/                                gen_fixtures.py, revendor.py, verify_standalone.sh
 ├── docs/                                  8 numbered progressive chapters
 └── examples/                               5 runnable, per-topic scripts

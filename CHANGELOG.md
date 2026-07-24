@@ -11,8 +11,30 @@ and this project adheres to the versioning implied by `PROTOCOL_VERSION`
 
 Nothing yet. See `ROADMAP.md` for planned work (a dense-recall booster
 wired into `SagJournal.recall()`, a `sqlite-vec`-style C loadable extension,
-and the joint fixture freeze with the SAG Video side for `PROTOCOL.md`
-`0.1`).
+and the `0.1` protocol freeze once both providers' adapters pass the full
+fixture set).
+
+## [0.1.1] — X1 §13 joint freeze
+
+### Added
+- **Four joint-freeze conformance fixtures** (total now eight), pinning the
+  four `PROTOCOL.md` §13 decisions reconciled with the SAG Video side
+  (OpenAI Codex):
+  - `unicode_distinct` — §13.1 free-text is NOT normalized (NFC-composed vs
+    NFD-decomposed spellings hash distinctly).
+  - `refuse_float_metadata` — §13.2 a nested float in `metadata` is refused.
+  - `namespace_scoped` — §13.3 `ns` (the full canonical `scope_uri`) binds
+    into the hash (same inputs, different `ns` → different hashes).
+  - `receipt_observation_roundtrip` — §13.4 the frozen `sag.receipt` /
+    `sag.observation` metadata field names + deterministic entry-id rule.
+- `sqlite3_sag.conformance` now supports **refusal fixtures** (`expect_refusal`):
+  an external adapter can prove it *also* refuses inadmissible payloads.
+
+### Changed
+- `PROTOCOL.md` §13 moved from "open reconciliation items" to **frozen joint
+  decisions** (the protocol id stays `0.1-draft` until both adapters pass the
+  full fixture set). SAG Video independently reproduced the original four
+  fixtures; the §13 fixtures are the next reproduction target.
 
 ## [0.1.0] — initial release
 
@@ -66,7 +88,7 @@ and the joint fixture freeze with the SAG Video side for `PROTOCOL.md`
 - **Vendored `declared_core`** — a byte-identical, drift-guarded in-repo
   copy (`VENDORED.json`, `tools/revendor.py`) so the package installs and
   runs standalone with zero PyPI/PYTHONPATH coupling to a sibling repo.
-- **21 tests** (`tests/`): extraction parity, chain monotonicity, all three
+- **25 tests** (`tests/`): extraction parity, chain monotonicity, all three
   tamper-break classes, idempotency, chain-disabled degradation, the payload
   gate, `hmac-sha256` mode, old-database migration, and conformance-fixture
   reproduction.

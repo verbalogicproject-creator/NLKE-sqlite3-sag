@@ -49,7 +49,7 @@ from .schema import (
 )
 from .store import connect, new_id, now_iso
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 # The versioned journal protocol this build implements (see PROTOCOL.md).
 PROTOCOL_VERSION = "sag-journal/0.1-draft"

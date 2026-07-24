@@ -1,0 +1,28 @@
+{
+  "name": "refuse_float_metadata",
+  "description": "§13.2 number profile: a nested float in metadata is REFUSED by the payload gate (adapters encode fractional values as decimal strings).",
+  "chain": {
+    "alg": "sha256",
+    "ns": ""
+  },
+  "inputs": [
+    {
+      "id": "f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0",
+      "created_at": "2026-01-01T00:00:00+00:00",
+      "kind": "sag.retrieval",
+      "content": "a score",
+      "tags": [],
+      "metadata": {
+        "scores": {
+          "a": 0.1
+        }
+      }
+    }
+  ],
+  "expect_refusal": true,
+  "expected": {
+    "refused": true,
+    "refused_index": 0,
+    "count": 0
+  }
+}
