@@ -1,0 +1,60 @@
+{
+  "name": "tamper_content",
+  "description": "Mutate row 2's content in place -> row-hash-mismatch at seq 2.",
+  "chain": {
+    "alg": "sha256",
+    "ns": ""
+  },
+  "inputs": [
+    {
+      "id": "11111111111111111111111111111111",
+      "created_at": "2026-01-01T00:00:00+00:00",
+      "kind": "sag.retrieval",
+      "content": "loaded context pack A",
+      "tags": [
+        "ctx",
+        "load"
+      ]
+    },
+    {
+      "id": "22222222222222222222222222222222",
+      "created_at": "2026-01-01T00:00:01+00:00",
+      "kind": "sag.context_load",
+      "content": "answered from pack A",
+      "tags": [],
+      "metadata": {
+        "k": 1
+      },
+      "session_id": "s1"
+    }
+  ],
+  "tamper": [
+    {
+      "seq": 2,
+      "set": {
+        "content": "answered from pack B"
+      }
+    }
+  ],
+  "expected": {
+    "rows": [
+      {
+        "seq": 1,
+        "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+        "row_hash": "96a7cf1220d82ea9fcf0523e8cf579fbac8b74ba1a421f9f4f6e9dc6e73d5a8f"
+      },
+      {
+        "seq": 2,
+        "prev_hash": "96a7cf1220d82ea9fcf0523e8cf579fbac8b74ba1a421f9f4f6e9dc6e73d5a8f",
+        "row_hash": "b9d57d932db5a999c1798becdf36f685ad953f4ea7a2677cd973976e348bbcda"
+      }
+    ],
+    "verify": {
+      "ok": false,
+      "break": "row-hash-mismatch",
+      "at_seq": 2,
+      "checked": 1
+    },
+    "count": 2
+  }
+}

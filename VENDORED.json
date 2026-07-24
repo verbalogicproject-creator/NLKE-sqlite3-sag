@@ -1,0 +1,10 @@
+{
+  "vendored": [
+    {
+      "generated_by": "tools/revendor.py",
+      "name": "declared_core",
+      "source_version": "0.1.0",
+      "tree_sha": "blake2b:28f5a6fe4434a1b27123cea8b01dec4605e4fd2b286e6ec7e6ecb804746b3a19"
+    }
+  ]
+}

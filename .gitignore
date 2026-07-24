@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+
+# SQLite databases (never commit journals)
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+
+# Test / tooling
+.pytest_cache/
+.coverage
+htmlcov/
+.vouch/
+
+# env
+.env
+.env.*

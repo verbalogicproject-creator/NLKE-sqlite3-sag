@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sqlite3-sag"
+version = "0.1.0"
+description = "The SAG journal as a tamper-evident, SQLite-native primitive: a declared, append-only log of typed entries with a SHA-256 hash chain you can verify. Register-before-emit, refuse-to-pretend, provider-neutral. Pure-Python, pure-stdlib, $0."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+authors = [{ name = "Eyal Nof" }]
+keywords = [
+    "sag", "journal", "append-only", "tamper-evident", "hash-chain",
+    "audit-log", "provenance", "sqlite", "fts5", "receipts",
+    "register-before-emit", "refuse-to-pretend", "local-first", "declared",
+]
+# No required third-party dependency. The retrieval engine declared_core is
+# VENDORED (a byte-identical in-repo copy; see VENDORED.json), so sqlite3-sag
+# installs and runs on its own, offline, $0 — and, critically, depends on NO
+# SQLite loadable extension (stdlib sqlite3 often cannot load one). A dense
+# (semantic) recall booster is an OPTIONAL extra; the hash chain uses only the
+# stdlib (hashlib / hmac).
+dependencies = []
+
+[project.optional-dependencies]
+# Optional dense (semantic) recall booster (declared_core's numpy path). The
+# floor — BM25 + structural + the whole hash chain — needs none of it.
+dense = ["numpy>=1.21"]
+dev = ["pytest>=7.0"]
+
+[project.urls]
+Homepage = "https://github.com/verbalogicproject-creator/NLKE-sqlite3-sag"
+Documentation = "https://github.com/verbalogicproject-creator/NLKE-sqlite3-sag/blob/main/PROTOCOL.md"
+
+[project.scripts]
+sqlite3-sag = "sqlite3_sag.cli:main"
+
+[tool.setuptools.packages.find]
+# The primitive, the compat shim, and the vendored engine.
+include = ["sqlite3_sag*", "project_memory*", "declared_core*"]
+
+[tool.setuptools.package-data]
+sqlite3_sag = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

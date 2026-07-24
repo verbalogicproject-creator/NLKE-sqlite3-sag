@@ -1,0 +1,150 @@
+"""Structural expansion — the graph signal without an explicit graph.
+
+Most corpora don't ship an edge table, but they carry *implicit* structure:
+rows that share a ``kind``/``batch``/category, rows whose tag lists overlap, and
+rows joined by a foreign key. `declared_core` reads those relationships straight
+off the declared schema:
+
+  - ``cluster_columns``  → neighbours share a scalar value (same kind, same batch)
+  - ``tag_columns``      → neighbours' JSON tag arrays overlap
+  - ``links``            → children referencing a matched parent (fact ← episode)
+
+Given the BM25 top-N as anchors, structural expansion pulls in the items one hop
+away along any of these. It surfaces relevant rows that share *no query terms*
+with the question — the recall that pure lexical search misses.
+"""
+
+from __future__ import annotations
+
+import json
+import sqlite3
+from typing import Any
+
+from ..schema import CorpusSchema, SourceTable
+
+_MAX_TAG_PATTERNS = 20
+
+
+def anchor_clusters(schema: CorpusSchema, anchors: list[dict[str, Any]]) -> dict[str, set]:
+    """Map each declared cluster column → the set of values seen in the anchors.
+    Handy as ``ctx["anchor_clusters"]`` for the hop_distance dimension."""
+    cols: set[str] = set()
+    for src in schema.sources:
+        cols.update(src.cluster_columns)
+    out: dict[str, set] = {c: set() for c in cols}
+    for a in anchors:
+        for c in cols:
+            if a.get(c) is not None:
+                out[c].add(a[c])
+    return {c: v for c, v in out.items() if v}
+
+
+def expand_from_anchors(
+    conn: sqlite3.Connection,
+    schema: CorpusSchema,
+    anchors: list[dict[str, Any]],
+    limit: int = 25,
+) -> list[dict[str, Any]]:
+    """Pull items one structural hop from the anchors, per the declared schema."""
+    if not anchors:
+        return []
+
+    by_table: dict[str, list[dict[str, Any]]] = {}
+    for a in anchors:
+        by_table.setdefault(str(a.get("table")), []).append(a)
+
+    found: dict[tuple[str, Any], dict[str, Any]] = {}
+
+    # 1. Cluster + tag neighbours within each source.
+    for src in schema.sources:
+        src_anchors = by_table.get(src.name, [])
+        if not src_anchors:
+            continue
+        _expand_clusters(conn, src, src_anchors, limit, found)
+        _expand_tags(conn, src, src_anchors, limit, found)
+
+    # 2. Cross-table links: children referencing a matched parent.
+    for link in schema.links:
+        parent_anchors = by_table.get(link.parent, [])
+        parent_ids = [a["id"] for a in parent_anchors if a.get("id") is not None]
+        if not parent_ids:
+            continue
+        child = schema.source(link.child)
+        _expand_link(conn, child, link.key, parent_ids, limit, found)
+
+    return list(found.values())[:limit]
+
+
+def _load(src: SourceTable, row: tuple, hop: str) -> dict[str, Any]:
+    cols = src.load_columns
+    item: dict[str, Any] = {"table": src.name, "structural_hop": hop}
+    for col, val in zip(cols, row):
+        item[col] = val
+    item["id"] = row[cols.index(src.id_column)]
+    return item
+
+
+def _select_prefix(src: SourceTable) -> str:
+    return f"SELECT {', '.join(src.load_columns)} FROM {src.name}"
+
+
+def _order_limit(src: SourceTable) -> str:
+    tail = f" ORDER BY {src.order_by}" if src.order_by else ""
+    return tail + " LIMIT ?"
+
+
+def _expand_clusters(conn, src, src_anchors, limit, found) -> None:
+    for col in src.cluster_columns:
+        values = {a[col] for a in src_anchors if a.get(col) is not None}
+        if not values:
+            continue
+        placeholders = ",".join("?" * len(values))
+        where = f"{col} IN ({placeholders})"
+        if src.where:
+            where += f" AND ({src.where})"
+        sql = f"{_select_prefix(src)} WHERE {where}{_order_limit(src)}"
+        for row in conn.execute(sql, (*values, limit)).fetchall():
+            item = _load(src, row, hop=col)
+            found.setdefault((src.name, item["id"]), item)
+
+
+def _expand_tags(conn, src, src_anchors, limit, found) -> None:
+    for col in src.tag_columns:
+        tags: set[str] = set()
+        for a in src_anchors:
+            tags.update(_parse_tags(a.get(col)))
+        tags = set(list(tags)[:_MAX_TAG_PATTERNS])
+        if not tags:
+            continue
+        clauses = " OR ".join(f"{col} LIKE ?" for _ in tags)
+        params = [f'%"{t}"%' for t in tags]
+        where = f"({clauses})"
+        if src.where:
+            where += f" AND ({src.where})"
+        sql = f"{_select_prefix(src)} WHERE {where}{_order_limit(src)}"
+        for row in conn.execute(sql, (*params, limit)).fetchall():
+            item = _load(src, row, hop="tag")
+            found.setdefault((src.name, item["id"]), item)
+
+
+def _expand_link(conn, child, key, parent_ids, limit, found) -> None:
+    placeholders = ",".join("?" * len(parent_ids))
+    where = f"{key} IN ({placeholders})"
+    if child.where:
+        where += f" AND ({child.where})"
+    sql = f"{_select_prefix(child)} WHERE {where}{_order_limit(child)}"
+    for row in conn.execute(sql, (*parent_ids, limit)).fetchall():
+        item = _load(child, row, hop=f"link:{key}")
+        found.setdefault((child.name, item["id"]), item)
+
+
+def _parse_tags(raw: Any) -> list[str]:
+    if not raw:
+        return []
+    if isinstance(raw, list):
+        return [str(t) for t in raw]
+    try:
+        parsed = json.loads(str(raw))
+        return [str(t) for t in parsed] if isinstance(parsed, list) else []
+    except json.JSONDecodeError:
+        return []
