@@ -40,6 +40,37 @@ _TOKEN_RE = re.compile(r"[A-Za-z0-9_]+")
 #: The apostrophe-s was the entire difference between the two pairs.
 _POSSESSIVE_RE = re.compile(r"(\w)['’][sS]\b")
 
+#: MEASURED AND REJECTED — a collapsed identity token (2026-07-26).
+#:
+#: The obvious next move after the possessive fix was to give each dotted/hyphenated
+#: identifier a collapsed single-token form: ``gemini-3.5-flash`` → ``gemini35flash``,
+#: emitted alongside the split tokens here and declared in the corpus. The reasoning was
+#: sound and the mechanism verifiably fired:
+#:
+#:   * FTS5's default tokeniser shreds ``gemini-3.5-flash`` into ``gemini · 3 · 5 ·
+#:     flash``, and none of those distinguishes — ``gemini`` is in 17 of 17 model cards,
+#:     and ``3`` also matches veo-3.1 and lyria-3.
+#:   * The collapsed token appeared in exactly 2 of 365 documents — maximally
+#:     discriminating, the opposite of the near-constant dilution that sank the α-leg
+#:     dimensions and the retrieval facets.
+#:   * **It worked at this layer.** With the token, the correct card moved from BM25
+#:     rank 3 to rank 1 (score −8.910 → −13.344).
+#:
+#: **And it changed retrieval recall by exactly nothing:** discordant (0,0) at k=1, 2
+#: and 4, in both intent-on and intent-off conditions, and −1 at k=8. So it was reverted,
+#: exactly as the facets were.
+#:
+#: WHY, AND THIS IS THE TRANSFERABLE PART: **RRF fuses RANKS, not scores.** A document's
+#: contribution is ``1/(60 + rank)``, so promoting it from rank 3 to rank 1 moves its
+#: term from 1/63 to 1/61 — a ~3% change, swamped by every other leg. A large,
+#: real, correctly-aimed improvement *inside* one leg is nearly invisible after fusion.
+#:
+#: The lesson is not "identifier tokens are useless" — it is that **an intervention must
+#: be aimed at the stage that decides the outcome.** Here that stage was intent routing,
+#: not tokenisation: disabling it on the same corpus moved recall@4 from 11/20 to 16/20,
+#: five one-directional flips. Optimising the leg while the fusion discards the
+#: difference is work that measures as zero.
+
 
 def sanitize_query(query: str) -> str:
     """Return a MATCH-safe query with terms quoted and OR-joined. Empty → ''.
