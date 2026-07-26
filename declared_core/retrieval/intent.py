@@ -90,3 +90,70 @@ def weights_for(query: str, *, enabled: bool = True) -> Weights:
     if not enabled:
         return UNIFORM
     return classify_intent(query).weights
+
+
+def reallocate_absent(weights: Weights, present: tuple[bool, bool, bool, bool]) -> Weights:
+    """Move an absent leg's declared weight to its substitute, instead of losing it.
+
+    THE BUG THIS FIXES. A weight profile is a declared RATIO between four signals.
+    When a leg returns nothing, its weight simply stops contributing — and the profile
+    silently becomes a *different* profile that nobody declared and no test observes.
+
+    ``exploratory`` is the worst case, and it is the common one, because dense is
+    optional by design (invariant 2: "BM25 is the floor"). Declared:
+
+        exploratory     bm25 0.45   struct 0.75   rules 0.50   dense 0.95
+
+    The intent is plainly "lean on semantics." With no embedder the dense list is empty,
+    the 0.95 evaporates, and what actually runs is ``struct 0.75`` against ``bm25 0.45``
+    — **structural outweighing lexical 1.67x**, which is "lean on structure": a policy
+    the author never wrote.
+
+    Measured on a 366-document corpus of near-identical model cards, where structural
+    expansion returns the sibling set and is therefore *anti*-discriminating:
+
+        intent routing on, as shipped                recall@4  11/20 = 0.5500
+        intent routing off (UNIFORM)                 recall@4  16/20 = 0.8000
+        intent routing on + this reallocation        recall@4  16/20 = 0.8000
+
+    Every profile with ``struct/bm25 > 1`` lost flips (exploratory -4, goal_based -1);
+    every profile below 1.0 was exactly neutral. Discordant (5,0), exact McNemar
+    two-sided p = 0.0625 — **DIRECTIONAL, one flip short of the alpha=0.05 gate**. The
+    *bug* is established by instrumentation (an existential claim, shown by a
+    reproducible instance); the *recall improvement* is not yet, and is labelled as such.
+
+    WHY REALLOCATION AND NOT RENORMALISATION. Renormalising the live weights was tried
+    first and is a **no-op**: weighted RRF sums ``w_i / (k + rank_i)``, so scaling every
+    live weight by a constant scales every score by that constant and preserves the
+    ordering exactly. Only the RATIO can change the result.
+
+    WHY DENSE FALLS BACK TO BM25. They are substitutes — both score a document's OWN
+    content, one lexically and one semantically. ``structural`` scores its NEIGHBOURS,
+    which is a different question, so it is never a fallback target. ``rules`` is not
+    either: a declared-dimension score has no lexical equivalent.
+
+    SCOPE, STATED HONESTLY. Only the dense case is reallocated, and only the dense case
+    was measured — the rules leg was non-empty throughout the run above, so a
+    rules-fallback would be an unmeasured guess wearing a measured result's clothes.
+    An absent ``structural`` or ``rules`` leg still loses its weight; that residue of the
+    same bug is left visible rather than fixed blind.
+
+    NO-OP WHEN DENSE IS PRESENT, which is what makes this safe to ship fleet-wide: a
+    deployment with an embedder is unaffected, so the intended case cannot regress.
+
+    AND NO-OP FOR AN ALL-EQUAL PROFILE — i.e. ``UNIFORM``, intent routing switched off.
+    That is not a special case bolted on; it follows from the principle. This repair
+    exists to preserve a declared LEAN when the leg it leans on is missing. ``UNIFORM``
+    declares no lean, so dropping its dense weight already leaves ``1:1:1`` — equality
+    among the legs that remain, which is exactly what was declared. Reallocating would
+    make it ``2:1:1``, inventing a lexical bias nobody asked for and breaking the
+    documented contract that intent-off is classic unweighted RRF. Measured before
+    exempting it: reallocating UNIFORM changed recall@4 by nothing (16/20 either way) —
+    so it would have been an unrequested semantic change bought for zero.
+    """
+    bm25, struct, rules, dense = weights
+    if len(set(weights)) == 1:          # declares no lean; there is nothing to preserve
+        return weights
+    if not present[3] and dense:
+        bm25, dense = bm25 + dense, 0.0
+    return (bm25, struct, rules, dense)

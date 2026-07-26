@@ -99,8 +99,11 @@ def hybrid_query(
     result = _intent.classify_intent(query) if use_intent else _intent.IntentResult(
         "uniform", 1.0, _intent.UNIFORM
     )
-    weights = result.weights
     lists = [bm25_all, structural_ranked, rules_ranked, dense_ranked]
+    # An absent leg's declared weight is REALLOCATED, not lost. Without this, a profile
+    # that leans on dense silently becomes a profile that leans on structural whenever no
+    # embedder is configured — a ratio nobody declared. See intent.reallocate_absent.
+    weights = _intent.reallocate_absent(result.weights, tuple(bool(lst) for lst in lists))
     total = len(candidates)
 
     if total < schema.small_corpus_threshold:
