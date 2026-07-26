@@ -109,35 +109,54 @@ def reallocate_absent(weights: Weights, present: tuple[bool, bool, bool, bool]) 
     — **structural outweighing lexical 1.67x**, which is "lean on structure": a policy
     the author never wrote.
 
-    Measured on a 366-document corpus of near-identical model cards, where structural
+    Measured on a 227-document corpus of near-identical model cards, where structural
     expansion returns the sibling set and is therefore *anti*-discriminating:
 
-        intent routing on, as shipped                recall@4  11/20 = 0.5500
-        intent routing off (UNIFORM)                 recall@4  16/20 = 0.8000
-        intent routing on + this reallocation        recall@4  16/20 = 0.8000
+        weight lost (as shipped before this fix)     recall@4  12/20 = 0.6000
+        weight reallocated                           recall@4  19/20 = 0.9500
 
-    Every profile with ``struct/bm25 > 1`` lost flips (exploratory -4, goal_based -1);
-    every profile below 1.0 was exactly neutral.
+    Instrumented directly rather than inferred. For "What is gemini-3.5-flash's knowledge
+    cutoff date?", with the pre-fix weights ``(0.45, 0.75, 0.50, 0.95)`` and an empty
+    dense leg:
 
-    REPLICATED ON A SECOND, INDEPENDENT CORPUS, and now ESTABLISHED. The first corpus
-    gave discordant (5,0), p = 0.0625 — one flip short of the gate. The same intervention
-    was then measured on the EU AI Act corpus (12 provisions, 30 queries, a real declared
+        BM25 top-4        gemini-api-instances · gemini-api-schema ·
+                          model-gemini-3.5-flash · model-gemini-3.5-flash-lite
+        STRUCTURAL top-4  model-veo-3.1-generate-preview · model-veo-2.0-generate-001 ·
+                          model-lyria-3-clip-preview · model-gemini-embedding-2
+
+    The lexical leg holds the answer; the structural leg holds the sibling set — video and
+    music models, for a question about a text model — and outweighs it 1.67x.
+
+    Every profile with ``struct/bm25 > 1`` lost flips; every profile below 1.0 was exactly
+    neutral.
+
+    NOTE ON AN EARLIER, LOWER SET OF NUMBERS. The first run of this measurement reported
+    11/20 -> 16/20 on a "366-document" corpus. That corpus was wrong: the harness ingested
+    ``domains/gemini-api`` with ``**/*.ngf.md`` while claiming to exclude
+    ``recipes/staging/``, so 139 unapproved mined recipes were silently included. Both
+    arms shared the same contaminated corpus, so the A/B stayed valid — but the absolute
+    figures were understated. On the corrected corpus the effect is LARGER, not smaller.
+
+    REPLICATED ON A SECOND, INDEPENDENT CORPUS, and now ESTABLISHED. Corpus 1 alone gives
+    discordant (7,0), p = 0.0156 at the primary endpoint — on the contaminated corpus it
+    had been (5,0), p = 0.0625, one flip short, which is why replication was sought rather
+    than the claim promoted. The same intervention was then measured on the EU AI Act corpus (12 provisions, 30 queries, a real declared
     edge list wired into the structural leg — a corpus with no near-duplicate siblings and
     a different question set):
 
         k    corpus 1 (n=20)   corpus 2 (n=30)   pooled    exact McNemar p
-        1        (1,0)             (3,0)          (4,0)        0.1250
-        2        (3,0)             (3,0)          (6,0)        0.0312
-        4        (5,0)             (4,0)          (9,0)        0.0039   <- primary
-        8        (2,0)             (2,0)          (4,0)        0.1250
+        1        (2,0)             (3,0)          (5,0)        0.0625
+        2        (4,0)             (3,0)          (7,0)        0.0156
+        4        (7,0)             (4,0)         (11,0)        0.0010   <- primary
+        8        (3,0)             (2,0)          (5,0)        0.0625
 
-    **22 flips across two corpora and four cutoffs, zero reversals anywhere.**
+    **28 flips across two corpora and four cutoffs, zero reversals anywhere.**
 
     recall@4 is the PRE-REGISTERED primary endpoint (it was the metric on corpus 1 from
     the start, matching the answering arm's 4-document context window), so its pooled
     p = 0.0039 needs no multiplicity correction. The other three k values are secondary
-    and four were tested, so they do need it: under Benjamini-Hochberg only k=4 survives.
-    **k=2's (6,0) is therefore suggestive, NOT established, and is not banked as a claim.**
+    and four were tested, so they do need it: under Benjamini-Hochberg k=4 and k=2 both
+    survive (0.0010 <= 0.0125 and 0.0156 <= 0.025). k=1 and k=8 do not, and are not banked.
     Corpus 2 alone is (4,0), p = 0.125 — a replication of direction, not independently
     decisive; the significance comes from pooling. Corpus 2 also has only 12 documents, so
     k=8 there is near-saturated (28/30 -> 30/30) and is the weakest column in the table.
