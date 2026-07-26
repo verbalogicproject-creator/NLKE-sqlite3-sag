@@ -117,10 +117,35 @@ def reallocate_absent(weights: Weights, present: tuple[bool, bool, bool, bool]) 
         intent routing on + this reallocation        recall@4  16/20 = 0.8000
 
     Every profile with ``struct/bm25 > 1`` lost flips (exploratory -4, goal_based -1);
-    every profile below 1.0 was exactly neutral. Discordant (5,0), exact McNemar
-    two-sided p = 0.0625 — **DIRECTIONAL, one flip short of the alpha=0.05 gate**. The
-    *bug* is established by instrumentation (an existential claim, shown by a
-    reproducible instance); the *recall improvement* is not yet, and is labelled as such.
+    every profile below 1.0 was exactly neutral.
+
+    REPLICATED ON A SECOND, INDEPENDENT CORPUS, and now ESTABLISHED. The first corpus
+    gave discordant (5,0), p = 0.0625 — one flip short of the gate. The same intervention
+    was then measured on the EU AI Act corpus (12 provisions, 30 queries, a real declared
+    edge list wired into the structural leg — a corpus with no near-duplicate siblings and
+    a different question set):
+
+        k    corpus 1 (n=20)   corpus 2 (n=30)   pooled    exact McNemar p
+        1        (1,0)             (3,0)          (4,0)        0.1250
+        2        (3,0)             (3,0)          (6,0)        0.0312
+        4        (5,0)             (4,0)          (9,0)        0.0039   <- primary
+        8        (2,0)             (2,0)          (4,0)        0.1250
+
+    **22 flips across two corpora and four cutoffs, zero reversals anywhere.**
+
+    recall@4 is the PRE-REGISTERED primary endpoint (it was the metric on corpus 1 from
+    the start, matching the answering arm's 4-document context window), so its pooled
+    p = 0.0039 needs no multiplicity correction. The other three k values are secondary
+    and four were tested, so they do need it: under Benjamini-Hochberg only k=4 survives.
+    **k=2's (6,0) is therefore suggestive, NOT established, and is not banked as a claim.**
+    Corpus 2 alone is (4,0), p = 0.125 — a replication of direction, not independently
+    decisive; the significance comes from pooling. Corpus 2 also has only 12 documents, so
+    k=8 there is near-saturated (28/30 -> 30/30) and is the weakest column in the table.
+
+    Two claims, two types, both now settled: the *bug* is existential and was established
+    by instrumenting the legs directly; the *recall improvement* is comparative and is
+    established at the primary endpoint by the pooled result above.
+    Reproduce: ``NLKE-primitives-library/tools/measure_corpus2.py``.
 
     WHY REALLOCATION AND NOT RENORMALISATION. Renormalising the live weights was tried
     first and is a **no-op**: weighted RRF sums ``w_i / (k + rank_i)``, so scaling every
