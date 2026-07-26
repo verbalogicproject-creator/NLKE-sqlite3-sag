@@ -18,10 +18,37 @@ from ..schema import CorpusSchema, SourceTable
 
 _TOKEN_RE = re.compile(r"[A-Za-z0-9_]+")
 
+#: A possessive marker is grammar, not a search term. Stripped BEFORE tokenising —
+#: both the straight and the typographic apostrophe.
+#:
+#: WHY THIS IS NOT COSMETIC. The tokeniser splits on non-word characters, so
+#: ``gemini-3.5-flash's`` becomes ``gemini · 3 · 5 · flash · s`` — one token more than
+#: ``gemini-3.5-flash``. Terms are then OR-joined, so that stray ``s`` becomes a full
+#: query term, and a bare ``s`` matches any document containing it standing alone.
+#:
+#: Measured on a 364-document corpus: **124 documents (34%) contain the token ``s``**.
+#: A term true of a third of the corpus carries almost no ordering information while
+#: still consuming weight — the same near-constant dilution this engine's own dimension
+#: guidance warns about (``docs/05-dimensions-the-rules-signal.md``), arriving through
+#: the tokeniser instead of through a declared dimension.
+#:
+#: Observed end-to-end before the fix, on a corpus of near-identical model documents:
+#:     "gemini-3.5-flash"                              -> correct document, rank 1
+#:     "gemini-3.5-flash's capabilities"               -> WRONG document
+#:     "What capabilities does gemini-3.5-flash have?" -> correct document, rank 1
+#:     "What is gemini-3.5-flash's knowledge cutoff?"  -> WRONG document
+#: The apostrophe-s was the entire difference between the two pairs.
+_POSSESSIVE_RE = re.compile(r"(\w)['’][sS]\b")
+
 
 def sanitize_query(query: str) -> str:
-    """Return a MATCH-safe query with terms quoted and OR-joined. Empty → ''."""
-    tokens = _TOKEN_RE.findall(query or "")
+    """Return a MATCH-safe query with terms quoted and OR-joined. Empty → ''.
+
+    Possessive markers are removed first, so ``"X's capabilities"`` searches for ``X``
+    rather than for ``X`` OR ``s``. See ``_POSSESSIVE_RE`` for why that mattered.
+    """
+    text = _POSSESSIVE_RE.sub(r"\1", query or "")
+    tokens = _TOKEN_RE.findall(text)
     quoted = [f'"{t}"' for t in tokens if t]
     return " OR ".join(quoted)
 
