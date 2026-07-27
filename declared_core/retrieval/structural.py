@@ -89,8 +89,38 @@ def _select_prefix(src: SourceTable) -> str:
 
 
 def _order_limit(src: SourceTable) -> str:
-    tail = f" ORDER BY {src.order_by}" if src.order_by else ""
-    return tail + " LIMIT ?"
+    """ORDER BY + LIMIT, with a deterministic fallback when none is declared.
+
+    WHY THE FALLBACK IS NOT OPTIONAL. Structural expansion selects neighbours under a
+    ``LIMIT``, so when a row has more neighbours than the limit, SOME subset comes back.
+    With no ``ORDER BY`` that subset is whatever SQLite yields first — rowid order, which
+    is insertion order. The engine then returns different results for the same query over
+    the same documents depending on the order they happened to be ingested.
+
+    Measured on a 20-document corpus ingested two different ways: **32 of 70 queries (46%)
+    returned a different top-4.** The bm25 and rules legs were byte-identical across both
+    runs; only the structural leg differed, and everything downstream moved with it. That
+    silently breaks invariant 4 — determinism — through an input nobody declares and no
+    test pins.
+
+    It is worse than a wrong number, because it is a number that changes for reasons the
+    experimenter cannot see. One architecture comparison in this program read 71/75 versus
+    75/75 purely from ingest order before this was found.
+
+    THE ID IS APPENDED EVEN WHEN AN ``order_by`` IS DECLARED, and that is the part that
+    actually mattered. ``frontmatter_rag`` declares ``order_by="last_updated DESC"``, so a
+    fallback-only fix changed nothing — the declared ordering was already there. But
+    measured on the same 20 documents, ``last_updated`` had **exactly one distinct value**:
+    every card carried the same date. A sort key that is constant across the corpus ties
+    every row, and SQLite then falls through to rowid, which is ingest order.
+
+    **A declared ordering on a near-constant column is equivalent to no ordering** — the
+    same near-constant failure this engine's dimension guidance warns about, arriving
+    through ORDER BY instead of through a weight. So the id is always appended: the
+    declared key expresses intent, the id makes ties deterministic.
+    """
+    declared = f"{src.order_by}, " if src.order_by else ""
+    return f" ORDER BY {declared}{src.id_column} LIMIT ?"
 
 
 def _expand_clusters(conn, src, src_anchors, limit, found) -> None:

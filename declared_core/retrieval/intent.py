@@ -137,7 +137,38 @@ def reallocate_absent(weights: Weights, present: tuple[bool, bool, bool, bool]) 
     arms shared the same contaminated corpus, so the A/B stayed valid — but the absolute
     figures were understated. On the corrected corpus the effect is LARGER, not smaller.
 
-    REPLICATED ON A SECOND, INDEPENDENT CORPUS, and now ESTABLISHED. Corpus 1 alone gives
+    ⚠ CLAIM DOWNGRADED — ESTABLISHED -> NOT_ESTABLISHED (2026-07-27).
+
+    The pooled result below was measured while structural expansion was
+    INGEST-ORDER-DEPENDENT: it selected neighbours under a LIMIT with a sort key
+    (`last_updated`) that was constant across the corpus, so the subset returned was
+    whatever rowid order gave. See `structural._order_limit`.
+
+    That bug is now fixed, and re-measuring changes the verdict:
+
+        k    corpus 1 (n=20)   corpus 2 (n=30)   pooled     p
+        1        (1,0)             (3,0)          (4,0)    0.1250
+        2        (0,0)             (3,0)          (3,0)    0.2500
+        4        (0,0)             (4,0)          (4,0)    0.1250   <- primary
+        8        (0,0)             (2,0)          (2,0)    0.5000
+
+    **On corpus 1 the effect is now (0,0) — it has vanished entirely.** The reallocation
+    was compensating for the non-determinism: the `exploratory` profile weighted a
+    randomly-truncated structural leg 1.67x over bm25, and reducing that weight mitigated
+    the damage. With the structural leg returning a stable, correct neighbour set, there
+    is nothing left to mitigate. Corpus 2 still shows a one-directional effect, but at
+    p = 0.1250 it does not clear the gate.
+
+    THE FIX IS KEPT ANYWAY, on the existential claim rather than the comparative one: a
+    profile that bets on an absent leg silently becomes a profile nobody declared, which
+    is a defect whether or not it currently costs recall. It has never lost a question in
+    any run (zero reversals across both corpora and four cutoffs), so keeping it is free.
+    What is retracted is the RECALL claim, not the correctness one.
+
+    The superseded measurement follows, kept because a retracted result is evidence too.
+
+    ---- SUPERSEDED (measured on the order-dependent engine) ----
+    Corpus 1 alone gave
     discordant (7,0), p = 0.0156 at the primary endpoint — on the contaminated corpus it
     had been (5,0), p = 0.0625, one flip short, which is why replication was sought rather
     than the claim promoted. The same intervention was then measured on the EU AI Act corpus (12 provisions, 30 queries, a real declared
