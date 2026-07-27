@@ -64,6 +64,7 @@ def hybrid_query(
     limit: int = 25,
     dense: DenseIndex | None = None,
     use_intent: bool = True,
+    weights: tuple[float, float, float, float] | None = None,
 ) -> HybridResult:
     """Run lexical + structural (+ optional dense) retrieval and fuse.
 
@@ -73,6 +74,23 @@ def hybrid_query(
     limit       how many hits to return, and the per-signal candidate cap.
     dense       an optional DenseIndex for semantic recall. ``None`` → lexical.
     use_intent  route fusion weights by query intent. ``False`` → uniform RRF.
+    weights     explicit ``(bm25, structural, rules, dense)`` weights that OVERRIDE both the
+                intent profile and UNIFORM. ``None`` → existing behaviour, unchanged.
+
+    WHY EXPLICIT WEIGHTS EXIST. Until now the only ways to influence fusion were the intent
+    profile and the uniform default, both chosen *inside* the engine. That makes per-corpus
+    fitting inexpressible: a fitting procedure has to **produce a weights object** and hand
+    it to the engine, and it cannot monkey-patch a module and call the result a deliverable.
+
+    It also closes a correctness hole. A caller carrying its own declared weights had no way
+    to pass them, so a wrapper would accept a weights object and silently drop it — the same
+    "a declared policy quietly becomes a different one" failure that ``reallocate_absent``
+    exists to prevent, arriving one layer up. `kg_rag_pipeline.retrieve.rank` hit exactly
+    that during Phase D2 and six of its tests caught it.
+
+    Explicit weights deliberately SKIP ``reallocate_absent``: a caller stating all four
+    numbers has already decided the ratio, and adjusting it underneath them would reintroduce
+    the silent substitution this parameter removes.
     """
     dims: DimensionSchema = schema.dimensions or DEFAULT_DIMS  # type: ignore[assignment]
 
@@ -100,10 +118,18 @@ def hybrid_query(
         "uniform", 1.0, _intent.UNIFORM
     )
     lists = [bm25_all, structural_ranked, rules_ranked, dense_ranked]
-    # An absent leg's declared weight is REALLOCATED, not lost. Without this, a profile
-    # that leans on dense silently becomes a profile that leans on structural whenever no
-    # embedder is configured — a ratio nobody declared. See intent.reallocate_absent.
-    weights = _intent.reallocate_absent(result.weights, tuple(bool(lst) for lst in lists))
+    if weights is not None:
+        # A caller stating all four numbers has decided the ratio; do not adjust it.
+        fusion_weights = tuple(weights)
+        result = _intent.IntentResult("declared", 1.0, fusion_weights)
+    else:
+        # An absent leg's declared weight is REALLOCATED, not lost. Without this, a profile
+        # that leans on dense silently becomes a profile that leans on structural whenever
+        # no embedder is configured — a ratio nobody declared. See intent.reallocate_absent.
+        fusion_weights = _intent.reallocate_absent(
+            result.weights, tuple(bool(lst) for lst in lists)
+        )
+    weights = fusion_weights
     total = len(candidates)
 
     if total < schema.small_corpus_threshold:
