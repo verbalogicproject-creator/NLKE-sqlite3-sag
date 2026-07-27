@@ -1,0 +1,1875 @@
+{
+  "lang": "python",
+  "scanner": "PythonScanner",
+  "root": "/root/projects/sqlite3-sag-ship",
+  "nodes": [
+    {
+      "name": "conftest.py",
+      "path": "conftest.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 9,
+      "size_bytes": 281,
+      "auto": true,
+      "category": "",
+      "identity": "Make the in-repo packages importable when running the suite from a checkout",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [],
+      "imported_by_engine": [],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [],
+        "imports_stdlib": [
+          "pathlib",
+          "sys"
+        ],
+        "imports_third_party": []
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "__init__.py",
+      "path": "declared_core/__init__.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 70,
+      "size_bytes": 1832,
+      "auto": true,
+      "category": "",
+      "identity": "declared_core \u2014 a declared, AI-optional hybrid retrieval engine.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [
+        "schema.py",
+        "store.py"
+      ],
+      "imported_by_engine": [],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [],
+        "imports_stdlib": [],
+        "imports_third_party": [
+          "dimensions",
+          "retrieval"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "cli.py",
+      "path": "declared_core/cli.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 149,
+      "size_bytes": 5539,
+      "auto": true,
+      "category": "",
+      "identity": "``declared-core`` command-line interface.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [
+        "demo.py"
+      ],
+      "imported_by_engine": [
+        "__main__.py"
+      ],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [
+          "_cmd_query",
+          "_cmd_classify",
+          "_cmd_dims",
+          "_cmd_demo",
+          "build_parser",
+          "main"
+        ],
+        "imports_stdlib": [
+          "argparse",
+          "json",
+          "sys"
+        ],
+        "imports_third_party": [
+          "__future__",
+          "dimensions",
+          "retrieval"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "demo.py",
+      "path": "declared_core/demo.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 154,
+      "size_bytes": 6551,
+      "auto": true,
+      "category": "",
+      "identity": "A tiny, self-contained demo corpus so the quickstart runs with zero setup.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [
+        "schema.py",
+        "store.py"
+      ],
+      "imported_by_engine": [
+        "cli.py"
+      ],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [
+          "build_demo",
+          "hash_embedder"
+        ],
+        "imports_stdlib": [
+          "re",
+          "sqlite3",
+          "zlib"
+        ],
+        "imports_third_party": [
+          "__future__",
+          "numpy"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "__init__.py",
+      "path": "declared_core/dimensions/__init__.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 21,
+      "size_bytes": 585,
+      "auto": true,
+      "category": "",
+      "identity": "Declared dimensions: a deterministic, explainable rules signal.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [
+        "schema.py",
+        "scorer.py"
+      ],
+      "imported_by_engine": [],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [],
+        "imports_stdlib": [],
+        "imports_third_party": []
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "schema.py",
+      "path": "declared_core/dimensions/schema.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 102,
+      "size_bytes": 5268,
+      "auto": true,
+      "category": "",
+      "identity": "Declared dimensions \u2014 named-attribute embeddings, not neural vectors.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [],
+      "imported_by_engine": [
+        "__init__.py",
+        "bm25.py",
+        "cli.py",
+        "conformance.py",
+        "demo.py",
+        "fusion.py",
+        "ingest.py",
+        "query.py",
+        "scorer.py",
+        "store.py",
+        "structural.py"
+      ],
+      "_detected": {
+        "classes": [
+          "DimensionDef",
+          "DimensionSchema"
+        ],
+        "top_level_fns": [],
+        "imports_stdlib": [
+          "dataclasses"
+        ],
+        "imports_third_party": [
+          "__future__"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "scorer.py",
+      "path": "declared_core/dimensions/scorer.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 233,
+      "size_bytes": 9101,
+      "auto": true,
+      "category": "",
+      "identity": "Rule-based dimension scorer \u2014 deterministic, explainable, no ML.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [
+        "schema.py"
+      ],
+      "imported_by_engine": [
+        "__init__.py"
+      ],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [
+          "_tokenize",
+          "_query_terms",
+          "_content",
+          "_tags",
+          "score_spatial_relevance",
+          "score_hop_distance",
+          "score_traversal_frequency",
+          "_item_id",
+          "score_match_precision",
+          "score_semantic_coverage",
+          "score_keyword_hit_rate",
+          "score_synthesis_potential",
+          "score_generative_scope",
+          "score_latency_class",
+          "score_storage_tier",
+          "score_modularity",
+          "score_error_recovery",
+          "register",
+          "has_scorer",
+          "score_item"
+        ],
+        "imports_stdlib": [
+          "json",
+          "math",
+          "re",
+          "typing"
+        ],
+        "imports_third_party": [
+          "__future__"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "__init__.py",
+      "path": "declared_core/retrieval/__init__.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 40,
+      "size_bytes": 1045,
+      "auto": true,
+      "category": "",
+      "identity": "Hybrid retrieval: BM25 + structural + optional dense, RRF-fused.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [
+        "bm25.py",
+        "dense.py",
+        "fusion.py",
+        "intent.py",
+        "rrf.py",
+        "structural.py"
+      ],
+      "imported_by_engine": [],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [],
+        "imports_stdlib": [],
+        "imports_third_party": []
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "bm25.py",
+      "path": "declared_core/retrieval/bm25.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 136,
+      "size_bytes": 5859,
+      "auto": true,
+      "category": "",
+      "identity": "BM25 over the declared sources, via SQLite FTS5.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [
+        "schema.py"
+      ],
+      "imported_by_engine": [
+        "__init__.py",
+        "fusion.py"
+      ],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [
+          "sanitize_query",
+          "bm25_source",
+          "bm25_search"
+        ],
+        "imports_stdlib": [
+          "re",
+          "sqlite3",
+          "typing"
+        ],
+        "imports_third_party": [
+          "__future__"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "dense.py",
+      "path": "declared_core/retrieval/dense.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 123,
+      "size_bytes": 4373,
+      "auto": true,
+      "category": "",
+      "identity": "Optional dense (semantic) retrieval \u2014 a booster, never a dependency.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [],
+      "imported_by_engine": [
+        "__init__.py",
+        "fusion.py"
+      ],
+      "_detected": {
+        "classes": [
+          "DenseIndex",
+          "NumpyVectorIndex"
+        ],
+        "top_level_fns": [
+          "_normalize_rows"
+        ],
+        "imports_stdlib": [
+          "typing"
+        ],
+        "imports_third_party": [
+          "__future__",
+          "numpy"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "fusion.py",
+      "path": "declared_core/retrieval/fusion.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 230,
+      "size_bytes": 9670,
+      "auto": true,
+      "category": "",
+      "identity": "Hybrid retrieval orchestrator \u2014 the one function most callers use.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [
+        "bm25.py",
+        "dense.py",
+        "rrf.py",
+        "schema.py",
+        "structural.py"
+      ],
+      "imported_by_engine": [
+        "__init__.py"
+      ],
+      "_detected": {
+        "classes": [
+          "HybridResult"
+        ],
+        "top_level_fns": [
+          "hybrid_query",
+          "_annotate",
+          "_as_tags",
+          "_merge_unique",
+          "_weighted_sum"
+        ],
+        "imports_stdlib": [
+          "dataclasses",
+          "json",
+          "sqlite3",
+          "typing"
+        ],
+        "imports_third_party": [
+          "__future__",
+          "dimensions"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "intent.py",
+      "path": "declared_core/retrieval/intent.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 235,
+      "size_bytes": 12957,
+      "auto": true,
+      "category": "",
+      "identity": "Intent-adaptive fusion weights.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [],
+      "imported_by_engine": [
+        "__init__.py"
+      ],
+      "_detected": {
+        "classes": [
+          "IntentResult"
+        ],
+        "top_level_fns": [
+          "classify_intent",
+          "weights_for",
+          "reallocate_absent"
+        ],
+        "imports_stdlib": [
+          "dataclasses",
+          "re"
+        ],
+        "imports_third_party": [
+          "__future__"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "rrf.py",
+      "path": "declared_core/retrieval/rrf.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 121,
+      "size_bytes": 4688,
+      "auto": true,
+      "category": "",
+      "identity": "Reciprocal Rank Fusion, with optional per-list weights.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [],
+      "imported_by_engine": [
+        "__init__.py",
+        "fusion.py"
+      ],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [
+          "rrf_fuse",
+          "_key_of",
+          "_source_label",
+          "limit_and_dedupe"
+        ],
+        "imports_stdlib": [
+          "typing"
+        ],
+        "imports_third_party": [
+          "__future__"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "structural.py",
+      "path": "declared_core/retrieval/structural.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 198,
+      "size_bytes": 8715,
+      "auto": true,
+      "category": "",
+      "identity": "Structural expansion \u2014 the graph signal without an explicit graph.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [
+        "schema.py"
+      ],
+      "imported_by_engine": [
+        "__init__.py",
+        "fusion.py"
+      ],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [
+          "anchor_clusters",
+          "expand_from_anchors",
+          "_load",
+          "_select_prefix",
+          "_order_limit",
+          "_expand_clusters",
+          "_expand_tags",
+          "_expand_link",
+          "_parse_tags"
+        ],
+        "imports_stdlib": [
+          "json",
+          "sqlite3",
+          "typing"
+        ],
+        "imports_third_party": [
+          "__future__"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "schema.py",
+      "path": "declared_core/schema.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 179,
+      "size_bytes": 7605,
+      "auto": true,
+      "category": "",
+      "identity": "Declared corpus schema \u2014 the heart of the generalization.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [],
+      "imported_by_engine": [
+        "__init__.py",
+        "bm25.py",
+        "cli.py",
+        "conformance.py",
+        "demo.py",
+        "fusion.py",
+        "ingest.py",
+        "query.py",
+        "scorer.py",
+        "store.py",
+        "structural.py"
+      ],
+      "_detected": {
+        "classes": [
+          "SourceTable",
+          "Link",
+          "CorpusSchema"
+        ],
+        "top_level_fns": [
+          "_check_identifier"
+        ],
+        "imports_stdlib": [
+          "dataclasses",
+          "re"
+        ],
+        "imports_third_party": [
+          "__future__"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "store.py",
+      "path": "declared_core/store.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 88,
+      "size_bytes": 3144,
+      "auto": true,
+      "category": "",
+      "identity": "SQLite store helpers: connect, and install an FTS5 index over declared tables.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [
+        "schema.py"
+      ],
+      "imported_by_engine": [
+        "__init__.py",
+        "demo.py",
+        "ingest.py",
+        "query.py"
+      ],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [
+          "connect",
+          "_quote_cols",
+          "install_fts",
+          "_install_one"
+        ],
+        "imports_stdlib": [
+          "sqlite3"
+        ],
+        "imports_third_party": [
+          "__future__"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "append_and_verify.py",
+      "path": "examples/append_and_verify.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 51,
+      "size_bytes": 1584,
+      "auto": true,
+      "category": "",
+      "identity": "Append a few entries, verify the chain, then demonstrate tamper-detection.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [],
+      "imported_by_engine": [],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [
+          "main"
+        ],
+        "imports_stdlib": [
+          "pathlib",
+          "sys"
+        ],
+        "imports_third_party": [
+          "__future__",
+          "sqlite3_sag"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "compat_shim_migration.py",
+      "path": "examples/compat_shim_migration.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 93,
+      "size_bytes": 3767,
+      "auto": true,
+      "category": "",
+      "identity": "The project_memory compat shim, and an honest old-database migration.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [],
+      "imported_by_engine": [],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [
+          "main"
+        ],
+        "imports_stdlib": [
+          "pathlib",
+          "sqlite3",
+          "sys",
+          "tempfile"
+        ],
+        "imports_third_party": [
+          "__future__",
+          "project_memory",
+          "sqlite3_sag"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "external_adapter_conformance.py",
+      "path": "examples/external_adapter_conformance.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 104,
+      "size_bytes": 3898,
+      "auto": true,
+      "category": "",
+      "identity": "An independent adapter, implemented from PROTOCOL.md alone -- proving the",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [],
+      "imported_by_engine": [],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [
+          "canonical_bytes",
+          "row_hash",
+          "walk_fixture",
+          "main"
+        ],
+        "imports_stdlib": [
+          "hashlib",
+          "json",
+          "pathlib",
+          "sys"
+        ],
+        "imports_third_party": [
+          "__future__"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "recall_over_journal.py",
+      "path": "examples/recall_over_journal.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 83,
+      "size_bytes": 3805,
+      "auto": true,
+      "category": "",
+      "identity": "BM25 + structural recall over your own journal -- no dense index required.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [],
+      "imported_by_engine": [],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [
+          "main"
+        ],
+        "imports_stdlib": [
+          "pathlib",
+          "sys"
+        ],
+        "imports_third_party": [
+          "__future__",
+          "declared_core",
+          "sqlite3_sag"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "register_before_emit.py",
+      "path": "examples/register_before_emit.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 77,
+      "size_bytes": 3240,
+      "auto": true,
+      "category": "",
+      "identity": "register-before-emit + refuse-to-pretend, demonstrated end-to-end.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [],
+      "imported_by_engine": [],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [
+          "main"
+        ],
+        "imports_stdlib": [
+          "pathlib",
+          "sys"
+        ],
+        "imports_third_party": [
+          "__future__",
+          "sqlite3_sag"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "__init__.py",
+      "path": "project_memory/__init__.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 59,
+      "size_bytes": 1542,
+      "auto": true,
+      "category": "",
+      "identity": "Compatibility shim \u2014 `sqlite3-sag` is the successor to `project_memory`'s",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [],
+      "imported_by_engine": [],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [],
+        "imports_stdlib": [],
+        "imports_third_party": [
+          "__future__",
+          "sqlite3_sag"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "__init__.py",
+      "path": "sqlite3_sag/__init__.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 101,
+      "size_bytes": 3090,
+      "auto": true,
+      "category": "",
+      "identity": "sqlite3-sag \u2014 the SAG journal as a tamper-evident, SQLite-native primitive.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [
+        "chain.py",
+        "ingest.py",
+        "payload.py",
+        "query.py",
+        "schema.py",
+        "store.py"
+      ],
+      "imported_by_engine": [],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [
+          "open_journal"
+        ],
+        "imports_stdlib": [],
+        "imports_third_party": [
+          "__future__"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "__main__.py",
+      "path": "sqlite3_sag/__main__.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 11,
+      "size_bytes": 165,
+      "auto": true,
+      "category": "",
+      "identity": "``python -m sqlite3_sag`` \u2192 the CLI.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [
+        "cli.py"
+      ],
+      "imported_by_engine": [],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [],
+        "imports_stdlib": [
+          "sys"
+        ],
+        "imports_third_party": [
+          "__future__"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "chain.py",
+      "path": "sqlite3_sag/chain.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 278,
+      "size_bytes": 9996,
+      "auto": true,
+      "category": "",
+      "identity": "The tamper-evidence layer \u2014 a SHA-256 hash chain over the append-only log.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [],
+      "imported_by_engine": [
+        "__init__.py"
+      ],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [
+          "canonical_bytes",
+          "_as_json",
+          "preimage",
+          "_key_bytes",
+          "compute_hash",
+          "genesis",
+          "head",
+          "head_hash",
+          "_row_preimage",
+          "verify",
+          "_break"
+        ],
+        "imports_stdlib": [
+          "hashlib",
+          "json",
+          "typing"
+        ],
+        "imports_third_party": [
+          "__future__",
+          "hmac"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "cli.py",
+      "path": "sqlite3_sag/cli.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 68,
+      "size_bytes": 2208,
+      "auto": true,
+      "category": "",
+      "identity": "A small command-line front door: verify a journal, or list recent entries.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [
+        "query.py",
+        "schema.py"
+      ],
+      "imported_by_engine": [
+        "__main__.py"
+      ],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [
+          "_journal",
+          "main"
+        ],
+        "imports_stdlib": [
+          "argparse",
+          "json",
+          "sys"
+        ],
+        "imports_third_party": [
+          "__future__"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "conformance.py",
+      "path": "sqlite3_sag/conformance.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 145,
+      "size_bytes": 5804,
+      "auto": true,
+      "category": "",
+      "identity": "Conformance harness \u2014 the cross-provider hash-parity contract.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [
+        "payload.py",
+        "query.py",
+        "schema.py"
+      ],
+      "imported_by_engine": [],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [
+          "_kinds_for",
+          "run_fixture",
+          "_verify_matches",
+          "check_fixture"
+        ],
+        "imports_stdlib": [
+          "typing"
+        ],
+        "imports_third_party": [
+          "__future__"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "ingest.py",
+      "path": "sqlite3_sag/ingest.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 207,
+      "size_bytes": 7421,
+      "auto": true,
+      "category": "",
+      "identity": "Writing to the journal: append (chained) entries, crystallize + supersede facts.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [
+        "payload.py",
+        "schema.py",
+        "store.py"
+      ],
+      "imported_by_engine": [
+        "__init__.py"
+      ],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [
+          "remember",
+          "_record_fact_no_commit",
+          "record_fact",
+          "invalidate_fact"
+        ],
+        "imports_stdlib": [
+          "json",
+          "sqlite3",
+          "typing"
+        ],
+        "imports_third_party": [
+          "__future__"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "payload.py",
+      "path": "sqlite3_sag/payload.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 93,
+      "size_bytes": 4019,
+      "auto": true,
+      "category": "",
+      "identity": "The payload-admissibility gate \u2014 refuse-to-pretend, at write time.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [],
+      "imported_by_engine": [
+        "__init__.py",
+        "conformance.py",
+        "ingest.py"
+      ],
+      "_detected": {
+        "classes": [
+          "InadmissiblePayload"
+        ],
+        "top_level_fns": [
+          "_check_metadata",
+          "check_payload"
+        ],
+        "imports_stdlib": [
+          "re",
+          "typing"
+        ],
+        "imports_third_party": [
+          "__future__"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "query.py",
+      "path": "sqlite3_sag/query.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 156,
+      "size_bytes": 6961,
+      "auto": true,
+      "category": "",
+      "identity": "SagJournal \u2014 the one object most callers use.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [
+        "schema.py",
+        "store.py"
+      ],
+      "imported_by_engine": [
+        "__init__.py",
+        "cli.py",
+        "conformance.py"
+      ],
+      "_detected": {
+        "classes": [
+          "SagJournal"
+        ],
+        "top_level_fns": [],
+        "imports_stdlib": [
+          "json",
+          "sqlite3",
+          "typing"
+        ],
+        "imports_third_party": [
+          "__future__",
+          "declared_core"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "schema.py",
+      "path": "sqlite3_sag/schema.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 133,
+      "size_bytes": 5758,
+      "auto": true,
+      "category": "",
+      "identity": "JournalSchema \u2014 declare how a project's journal becomes a searchable,",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [],
+      "imported_by_engine": [
+        "__init__.py",
+        "bm25.py",
+        "cli.py",
+        "conformance.py",
+        "demo.py",
+        "fusion.py",
+        "ingest.py",
+        "query.py",
+        "scorer.py",
+        "store.py",
+        "structural.py"
+      ],
+      "_detected": {
+        "classes": [
+          "JournalSchema"
+        ],
+        "top_level_fns": [],
+        "imports_stdlib": [
+          "dataclasses"
+        ],
+        "imports_third_party": [
+          "__future__",
+          "declared_core"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "store.py",
+      "path": "sqlite3_sag/store.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 139,
+      "size_bytes": 5575,
+      "auto": true,
+      "category": "",
+      "identity": "Physical storage: build the ``episodes`` + ``facts`` tables from a",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [
+        "schema.py"
+      ],
+      "imported_by_engine": [
+        "__init__.py",
+        "demo.py",
+        "ingest.py",
+        "query.py"
+      ],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [
+          "connect",
+          "new_id",
+          "now_iso",
+          "_episodes_ddl",
+          "_facts_ddl",
+          "_migrate_chain_columns",
+          "create_store"
+        ],
+        "imports_stdlib": [
+          "datetime",
+          "sqlite3",
+          "uuid"
+        ],
+        "imports_third_party": [
+          "__future__",
+          "declared_core"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "test_conformance.py",
+      "path": "tests/test_conformance.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 30,
+      "size_bytes": 987,
+      "auto": true,
+      "category": "",
+      "identity": "Conformance: every committed fixture must reproduce byte-for-byte.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [],
+      "imported_by_engine": [],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [
+          "test_fixture_reproduces",
+          "test_there_are_fixtures"
+        ],
+        "imports_stdlib": [
+          "json",
+          "pathlib"
+        ],
+        "imports_third_party": [
+          "__future__",
+          "pytest",
+          "sqlite3_sag"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "test_sqlite3_sag.py",
+      "path": "tests/test_sqlite3_sag.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 227,
+      "size_bytes": 8927,
+      "auto": true,
+      "category": "",
+      "identity": "Stage-1 green bar for sqlite3-sag:",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [],
+      "imported_by_engine": [],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [
+          "_ts",
+          "test_consumer_pattern_declared_grep_unchanged",
+          "test_consumer_pattern_declared_context_unchanged",
+          "test_unknown_kind_is_refused_register_before_emit",
+          "_journal",
+          "test_chain_is_monotonic_and_verifies",
+          "_seed_three",
+          "test_tamper_content_row_hash_mismatch",
+          "test_tamper_prev_hash_predecessor_mismatch",
+          "test_delete_row_sequence_gap",
+          "test_duplicate_id_is_noop_chain_unadvanced",
+          "test_distinct_ids_same_content_are_two_entries",
+          "test_chain_disabled_still_appends_and_verifies_trivially",
+          "test_recall_works_bm25_structural",
+          "test_payload_gate_rejects_oversize_secret_and_float",
+          "test_normal_consumer_content_is_admissible",
+          "test_hmac_mode_requires_key_and_verifies_with_it",
+          "test_hmac_without_key_raises",
+          "test_old_db_without_chain_columns_is_migrated_in_place"
+        ],
+        "imports_stdlib": [
+          "sqlite3"
+        ],
+        "imports_third_party": [
+          "__future__",
+          "project_memory",
+          "pytest",
+          "sqlite3_sag"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "gen_fixtures.py",
+      "path": "tools/gen_fixtures.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 182,
+      "size_bytes": 7806,
+      "auto": true,
+      "category": "",
+      "identity": "Generate the conformance fixtures under ``fixtures/`` from the reference",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [],
+      "imported_by_engine": [],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [
+          "_row",
+          "build",
+          "main"
+        ],
+        "imports_stdlib": [
+          "json",
+          "pathlib",
+          "sys",
+          "unicodedata"
+        ],
+        "imports_third_party": [
+          "__future__",
+          "sqlite3_sag"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    },
+    {
+      "name": "revendor.py",
+      "path": "tools/revendor.py",
+      "kind": "file",
+      "lang": "python",
+      "lines": 185,
+      "size_bytes": 7060,
+      "auto": true,
+      "category": "",
+      "identity": "Re-vendor + drift-guard for sqlite3-sag's Option-A vendored package.",
+      "mechanism": "",
+      "state": {
+        "db_tables_read": [],
+        "db_tables_write": [],
+        "mqtt": "",
+        "subprocess": [],
+        "external_apis": []
+      },
+      "imports_from_engine": [],
+      "imported_by_engine": [],
+      "_detected": {
+        "classes": [],
+        "top_level_fns": [
+          "_iter_files",
+          "tree_sha",
+          "_read_version",
+          "_dump_stamp",
+          "sync",
+          "check",
+          "main"
+        ],
+        "imports_stdlib": [
+          "argparse",
+          "hashlib",
+          "json",
+          "pathlib",
+          "re",
+          "shutil",
+          "sys"
+        ],
+        "imports_third_party": [
+          "__future__"
+        ]
+      },
+      "upgrade_vector": {
+        "source": "no_documented_next_move",
+        "ref": "",
+        "text": ""
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "__init__.py",
+      "to": "schema.py",
+      "kind": "imports"
+    },
+    {
+      "from": "__init__.py",
+      "to": "store.py",
+      "kind": "imports"
+    },
+    {
+      "from": "cli.py",
+      "to": "demo.py",
+      "kind": "imports"
+    },
+    {
+      "from": "demo.py",
+      "to": "schema.py",
+      "kind": "imports"
+    },
+    {
+      "from": "demo.py",
+      "to": "store.py",
+      "kind": "imports"
+    },
+    {
+      "from": "__init__.py",
+      "to": "schema.py",
+      "kind": "imports"
+    },
+    {
+      "from": "__init__.py",
+      "to": "scorer.py",
+      "kind": "imports"
+    },
+    {
+      "from": "scorer.py",
+      "to": "schema.py",
+      "kind": "imports"
+    },
+    {
+      "from": "__init__.py",
+      "to": "bm25.py",
+      "kind": "imports"
+    },
+    {
+      "from": "__init__.py",
+      "to": "dense.py",
+      "kind": "imports"
+    },
+    {
+      "from": "__init__.py",
+      "to": "fusion.py",
+      "kind": "imports"
+    },
+    {
+      "from": "__init__.py",
+      "to": "intent.py",
+      "kind": "imports"
+    },
+    {
+      "from": "__init__.py",
+      "to": "rrf.py",
+      "kind": "imports"
+    },
+    {
+      "from": "__init__.py",
+      "to": "structural.py",
+      "kind": "imports"
+    },
+    {
+      "from": "bm25.py",
+      "to": "schema.py",
+      "kind": "imports"
+    },
+    {
+      "from": "fusion.py",
+      "to": "bm25.py",
+      "kind": "imports"
+    },
+    {
+      "from": "fusion.py",
+      "to": "dense.py",
+      "kind": "imports"
+    },
+    {
+      "from": "fusion.py",
+      "to": "rrf.py",
+      "kind": "imports"
+    },
+    {
+      "from": "fusion.py",
+      "to": "schema.py",
+      "kind": "imports"
+    },
+    {
+      "from": "fusion.py",
+      "to": "structural.py",
+      "kind": "imports"
+    },
+    {
+      "from": "structural.py",
+      "to": "schema.py",
+      "kind": "imports"
+    },
+    {
+      "from": "store.py",
+      "to": "schema.py",
+      "kind": "imports"
+    },
+    {
+      "from": "__init__.py",
+      "to": "chain.py",
+      "kind": "imports"
+    },
+    {
+      "from": "__init__.py",
+      "to": "ingest.py",
+      "kind": "imports"
+    },
+    {
+      "from": "__init__.py",
+      "to": "payload.py",
+      "kind": "imports"
+    },
+    {
+      "from": "__init__.py",
+      "to": "query.py",
+      "kind": "imports"
+    },
+    {
+      "from": "__init__.py",
+      "to": "schema.py",
+      "kind": "imports"
+    },
+    {
+      "from": "__init__.py",
+      "to": "store.py",
+      "kind": "imports"
+    },
+    {
+      "from": "__main__.py",
+      "to": "cli.py",
+      "kind": "imports"
+    },
+    {
+      "from": "cli.py",
+      "to": "query.py",
+      "kind": "imports"
+    },
+    {
+      "from": "cli.py",
+      "to": "schema.py",
+      "kind": "imports"
+    },
+    {
+      "from": "conformance.py",
+      "to": "payload.py",
+      "kind": "imports"
+    },
+    {
+      "from": "conformance.py",
+      "to": "query.py",
+      "kind": "imports"
+    },
+    {
+      "from": "conformance.py",
+      "to": "schema.py",
+      "kind": "imports"
+    },
+    {
+      "from": "ingest.py",
+      "to": "payload.py",
+      "kind": "imports"
+    },
+    {
+      "from": "ingest.py",
+      "to": "schema.py",
+      "kind": "imports"
+    },
+    {
+      "from": "ingest.py",
+      "to": "store.py",
+      "kind": "imports"
+    },
+    {
+      "from": "query.py",
+      "to": "schema.py",
+      "kind": "imports"
+    },
+    {
+      "from": "query.py",
+      "to": "store.py",
+      "kind": "imports"
+    },
+    {
+      "from": "store.py",
+      "to": "schema.py",
+      "kind": "imports"
+    }
+  ],
+  "generated_at": "2026-07-27",
+  "scanner_version": "0.1.0"
+}
