@@ -140,10 +140,27 @@ def _expand_clusters(conn, src, src_anchors, limit, found) -> None:
 
 def _expand_tags(conn, src, src_anchors, limit, found) -> None:
     for col in src.tag_columns:
-        tags: set[str] = set()
+        collected: set[str] = set()
         for a in src_anchors:
-            tags.update(_parse_tags(a.get(col)))
-        tags = set(list(tags)[:_MAX_TAG_PATTERNS])
+            collected.update(_parse_tags(a.get(col)))
+        # SORTED BEFORE TRUNCATION, and that is not cosmetic. This was
+        # ``set(list(tags)[:_MAX_TAG_PATTERNS])`` — a SET converted to a list and cut to 20.
+        # Python randomises string hashing per process, so *which* 20 tags survived changed
+        # from run to run, which changed the structural expansion, which changed the
+        # ranking.
+        #
+        # Measured on the eco-index corpus, 49 queries, identical code and inputs: recall@1
+        # alternated between 0.6327 and 0.6122 across processes, and a downstream McNemar
+        # verdict flipped with it — discordant (5,0) p=0.0625 versus (6,0) p=0.0312, i.e.
+        # the same experiment landing on either side of alpha=0.05 depending on the hash
+        # seed. Pinning PYTHONHASHSEED made four consecutive runs identical, which is what
+        # identified the cause.
+        #
+        # This is the SECOND non-determinism of this family in this module. The first was
+        # `_order_limit` selecting neighbours under a LIMIT with no stable sort key. Both
+        # have the same shape: **a cut applied to an unordered collection.** Any truncation
+        # needs a total order first, or the cut is arbitrary and silently irreproducible.
+        tags = sorted(collected)[:_MAX_TAG_PATTERNS]
         if not tags:
             continue
         clauses = " OR ".join(f"{col} LIKE ?" for _ in tags)
